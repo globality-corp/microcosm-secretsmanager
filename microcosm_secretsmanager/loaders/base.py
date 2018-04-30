@@ -26,18 +26,18 @@ class SecretsManagerLoader:
         keyname = self.keyname(service)
         client = self._client(service)
 
-        args = dict(
+        get_args = dict(
             SecretId=keyname,
         )
 
         if version:
-            args.update(
+            get_args.update(
                 VersionStage=version,
             )
 
         try:
             response = client.get_secret_value(
-                **args,
+                **get_args,
             )
 
         except ClientError as e:
