@@ -7,6 +7,7 @@ from hamcrest import (
     is_,
 )
 from mock import patch
+from json import dumps
 
 from microcosm_secretsmanager.loaders.base import SecretsManagerLoader
 
@@ -30,7 +31,7 @@ class DummySecretsManagerLoader(SecretsManagerLoader):
 class TestSecretsManagerLoader:
 
     def setup(self):
-        self.loader = DummySecretsManagerLoader()
+        self.loader = DummySecretsManagerLoader(environment="dev")
         self.metadata = Metadata("dummy")
 
     def test_keyname(self):
@@ -43,13 +44,68 @@ class TestSecretsManagerLoader:
 
     def test_load_empty_configuration(self):
         with patch.object(self.loader, "_client") as mocked:
-            mocked.return_value.scan.return_value = dict(
-                Items=[],
+            mocked.return_value.get_secret_value.return_value = dict(
+                SecretString="{}",
             )
 
             assert_that(self.loader(self.metadata), is_(equal_to(dict())))
 
         mocked.assert_called_with(self.metadata.name)
-        mocked.return_value.scan.assert_called()
-        assert_that(True, equal_to(False))
+        mocked.return_value.get_secret_value.assert_called_with(
+            SecretId="secrets/dev/dummy",
+        )
 
+    def test_load_nested_configuration(self):
+        with patch.object(self.loader, "_client") as mocked:
+            mocked.return_value.get_secret_value.return_value = dict(
+                SecretString=dumps(dict(
+                    version="FAKE",
+                    config=dict(
+                        postgres=dict(
+                            password="fake",
+                        ),
+                    )
+                )),
+            )
+
+            assert_that(self.loader(self.metadata)["postgres"]["password"], is_(equal_to("fake")))
+
+        mocked.assert_called_with(self.metadata.name)
+        mocked.return_value.get_secret_value.assert_called_with(
+            SecretId="secrets/dev/dummy",
+        )
+
+
+    def test_load_wrong_configuration(self):
+        with patch.object(self.loader, "_client") as mocked:
+            mocked.return_value.get_secret_value.return_value = dict(
+                SecretString=dumps(dict(
+                    version="FAKE",
+                    wrong_config_key=dict(
+                        postgres=dict(
+                            password="fake",
+                        ),
+                    )
+                )),
+            )
+
+            assert_that(self.loader(self.metadata), is_(equal_to(dict())))
+
+        mocked.assert_called_with(self.metadata.name)
+        mocked.return_value.get_secret_value.assert_called_with(
+            SecretId="secrets/dev/dummy",
+        )
+
+
+    def test_load_not_json(self):
+        with patch.object(self.loader, "_client") as mocked:
+            mocked.return_value.get_secret_value.return_value = dict(
+                SecretString="NotJson",
+            )
+
+            assert_that(self.loader(self.metadata), is_(equal_to(dict())))
+
+        mocked.assert_called_with(self.metadata.name)
+        mocked.return_value.get_secret_value.assert_called_with(
+            SecretId="secrets/dev/dummy",
+        )

@@ -31,7 +31,7 @@ def load_from_secretmanager(environment=None):
             # noop
             return load_from_dict(dict())
 
-    return {}
+    return VersionedSecretsManagerLoader(environment)
 
 
 class VersionedSecretsManagerLoader(SecretsManagerLoader):
