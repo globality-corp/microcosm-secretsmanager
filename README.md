@@ -1,2 +1,5 @@
 # microcosm-secretmanager
-Microcosm-compatible configuration loader using AWS Secret Manager
+
+Secrets storage using AWS SecretsManager
+
+[![Circle CI](https://circleci.com/gh/globality-corp/microcosm-secretmanager/tree/develop.svg?style=svg)](https://circleci.com/gh/globality-corp/microcosm-secretmanager/tree/develop)

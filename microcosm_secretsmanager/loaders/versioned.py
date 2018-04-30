@@ -1,0 +1,4 @@
+
+
+class VersionedSecretManagerLoader(SecretManagerLoader):
+    pass
