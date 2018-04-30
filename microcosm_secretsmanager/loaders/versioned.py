@@ -1,4 +1,0 @@
-
-
-class VersionedSecretManagerLoader(SecretManagerLoader):
-    pass

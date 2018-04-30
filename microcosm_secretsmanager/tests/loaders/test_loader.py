@@ -14,7 +14,7 @@ from microcosm_secretsmanager.loaders.base import SecretsManagerLoader
 DummyValue = namedtuple("TestValue", "dummy")
 
 
-class DummyDynamoDBLoader(SecretsManagerLoader):
+class DummySecretsManagerLoader(SecretsManagerLoader):
 
     @property
     def value_type(self):
@@ -27,14 +27,22 @@ class DummyDynamoDBLoader(SecretsManagerLoader):
         return self.value_type(value)
 
 
-class TestDynamoDBLoader:
+class TestSecretsManagerLoader:
 
     def setup(self):
-        self.loader = DummyDynamoDBLoader()
+        self.loader = DummySecretsManagerLoader()
         self.metadata = Metadata("dummy")
 
+    def test_keyname(self):
+        self.metadata = Metadata("dummy")
+        self.loader = DummySecretsManagerLoader(
+            environment="dev"
+        )
+        keyname = self.loader.keyname("dummy")
+        assert_that(keyname, equal_to("secrets/dev/dummy"))
+
     def test_load_empty_configuration(self):
-        with patch.object(self.loader, "_table") as mocked:
+        with patch.object(self.loader, "_client") as mocked:
             mocked.return_value.scan.return_value = dict(
                 Items=[],
             )
@@ -43,4 +51,5 @@ class TestDynamoDBLoader:
 
         mocked.assert_called_with(self.metadata.name)
         mocked.return_value.scan.assert_called()
+        assert_that(True, equal_to(False))
 

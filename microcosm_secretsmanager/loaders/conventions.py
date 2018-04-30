@@ -16,7 +16,7 @@ from os import environ
 
 from microcosm.loaders import load_from_dict
 
-from microcosm_secretmanager.base import SecretsManagerLoader
+from microcosm_secretsmanager.loaders.base import SecretsManagerLoader
 
 
 def load_from_secretmanager(environment=None):
@@ -42,7 +42,7 @@ class VersionedSecretsManagerLoader(SecretsManagerLoader):
 
         """
         super(VersionedSecretsManagerLoader, self).__init__(
-            prefix=environment,
+            environment,
         )
 
     def __call__(self, metadata):
@@ -53,7 +53,7 @@ class VersionedSecretsManagerLoader(SecretsManagerLoader):
         version = environ.get("MICROCOSM_CONFIG_VERSION")
 
         if version is None:
-            # skip dynamodb loading; useful when AWS is not accessible
+            # skip AWS secretsmanager loading 
             return {}
 
         return super(VersionedSecretsManagerLoader, self).__call__(
