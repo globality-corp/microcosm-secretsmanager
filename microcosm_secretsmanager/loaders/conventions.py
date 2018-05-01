@@ -53,7 +53,7 @@ class VersionedSecretsManagerLoader(SecretsManagerLoader):
         version = environ.get("MICROCOSM_CONFIG_VERSION")
 
         if version is None:
-            # skip AWS secretsmanager loading 
+            # skip AWS secretsmanager loading
             return {}
 
         return super(VersionedSecretsManagerLoader, self).__call__(

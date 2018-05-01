@@ -1,10 +1,11 @@
-from json import dumps, loads
+from json import loads
 from json.decoder import JSONDecodeError
 
 from boto3 import Session
 from botocore.exceptions import ClientError
 
 from microcosm_logging.decorators import logger
+
 
 @logger
 class SecretsManagerLoader:
@@ -20,7 +21,6 @@ class SecretsManagerLoader:
     def __call__(self, metadata, version=None):
         service = metadata if isinstance(metadata, str) else metadata.name
         return self.get_secret_value(service, version)
-
 
     def get_secret_value(self, service, version=None):
         keyname = self.keyname(service)
@@ -41,7 +41,9 @@ class SecretsManagerLoader:
             )
 
         except ClientError as e:
-            self.logger.error(f"Error from Amazon retrieving the secrets for: {keyname}, most likely resource does not exist")
+            self.logger.error(
+                f"Error from Amazon retrieving the secrets for: {keyname}, most likely resource does not exist"
+            )
             return {}
         else:
             if "SecretString" in response:

@@ -75,7 +75,6 @@ class TestSecretsManagerLoader:
             SecretId="secrets/dev/dummy",
         )
 
-
     def test_load_wrong_configuration(self):
         with patch.object(self.loader, "_client") as mocked:
             mocked.return_value.get_secret_value.return_value = dict(
@@ -95,7 +94,6 @@ class TestSecretsManagerLoader:
         mocked.return_value.get_secret_value.assert_called_with(
             SecretId="secrets/dev/dummy",
         )
-
 
     def test_load_not_json(self):
         with patch.object(self.loader, "_client") as mocked:
