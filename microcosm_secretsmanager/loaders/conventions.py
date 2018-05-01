@@ -11,7 +11,6 @@ If the microcosm environment variables are not present, it skips loading secrets
 
 
 """
-
 from os import environ
 
 from microcosm.loaders import load_from_dict
