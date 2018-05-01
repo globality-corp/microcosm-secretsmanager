@@ -53,7 +53,7 @@ class SecretsManagerLoader:
                     return loads(response["SecretString"]).get("config", {})
                 except JSONDecodeError as e:
                     self.logger.error(
-                            f"Error parsing secrets for: {keyname}, version: {version}"
+                        f"Error parsing secrets for: {keyname}, version: {version}"
                     )
                     return {}
 
