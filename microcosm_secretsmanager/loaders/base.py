@@ -5,6 +5,12 @@ from warnings import warn
 from boto3 import Session
 from botocore.exceptions import ClientError
 
+from microcosm.metadata import Metadata
+
+
+class InvalidMetadata(Exception):
+    pass
+
 
 class SecretsManagerLoader:
     def __init__(self,
@@ -17,6 +23,12 @@ class SecretsManagerLoader:
         self.region = region
 
     def __call__(self, metadata, version=None):
+        if not isinstance(metadata, Metadata):
+            raise InvalidMetadata("Wrong argument metadata passed into SecretsManagerLoader")
+
+        if metadata.debug or metadata.testing:
+            return dict({})
+
         service = metadata.name
         return self.get_secret_value(service, version)
 

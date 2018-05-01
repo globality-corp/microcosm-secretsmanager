@@ -13,7 +13,7 @@ from hamcrest import (
 )
 from mock import patch
 
-from microcosm_secretsmanager.loaders.base import SecretsManagerLoader
+from microcosm_secretsmanager.loaders.base import SecretsManagerLoader, InvalidMetadata
 
 
 DummyValue = namedtuple("TestValue", "dummy")
@@ -111,3 +111,12 @@ class TestSecretsManagerLoader:
         mocked.return_value.get_secret_value.assert_called_with(
             SecretId="secrets/dev/dummy",
         )
+
+    def test_wrong_metadata(self):
+            assert_that(calling(self.loader).with_args("WrongMetadata"), raises(InvalidMetadata))
+
+    def test_debug_testing(self):
+        with patch.object(self.loader, "make_client") as mocked:
+            metadata = Metadata("DummyService", debug=True)
+            assert_that(self.loader(metadata), equal_to(dict({})))
+            mocked.assert_not_called()
