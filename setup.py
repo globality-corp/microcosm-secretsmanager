@@ -16,7 +16,6 @@ setup(
     zip_safe=False,
     install_requires=[
         "microcosm>=2.1.0",
-        "microcosm-logging>=1.0.0",
         "boto3>=1.7.9",
     ],
     setup_requires=[
