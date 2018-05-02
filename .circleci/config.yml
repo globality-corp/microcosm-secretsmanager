@@ -1,0 +1,81 @@
+defaults: &defaults
+  working_directory: ~/repo
+  docker:
+    - image: circleci/python:3.6.1
+      environment:
+        PYPI_USERNAME: "InjectedDuringRuntime"
+        PYPI_PASSWORD: "InjectedDuringRuntime"
+
+whitelist: &whitelist
+  paths:
+    .
+
+version: 2
+
+jobs:
+  checkout:
+    <<: *defaults
+
+    steps:
+      - checkout
+
+      - persist_to_workspace:
+          root: ~/repo
+          <<: *whitelist
+
+  test:
+    <<: *defaults
+
+    steps:
+      - attach_workspace:
+          at: ~/repo
+
+      - run:
+          name: Test code
+          command: |
+            pip install tox
+            tox
+
+  deploy:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/repo
+      - setup_remote_docker
+      - run:
+          name: Deploy
+          command: |
+            echo "[distutils]" > ~/.pypirc
+            echo "index-servers =" >> ~/.pypirc
+            echo "    pypi" >> ~/.pypirc
+            echo >> ~/.pypirc
+            echo "[pypi]" >> ~/.pypirc
+            echo "username:$PYPI_USERNAME" >> ~/.pypirc
+            echo "password:$PYPI_PASSWORD" >> ~/.pypirc
+            echo >> ~/.pypirc
+            python setup.py register -r pypi
+            python setup.py sdist upload -r pypi
+
+workflows:
+  version: 2
+
+  build-and-release:
+    jobs:
+      - checkout:
+          filters:
+            # run for all branches and tags
+            tags:
+              only: /.*/
+      - test:
+          requires:
+            - checkout
+          filters:
+            # run for all branches and tags
+            tags:
+              only: /.*/
+      - deploy:
+          requires:
+            - test
+          filters:
+            branches:
+              only: develop
