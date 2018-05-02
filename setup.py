@@ -2,7 +2,7 @@
 from setuptools import find_packages, setup
 
 project = "microcosm-secretsmanager"
-version = "0.2.2"
+version = "1.0.0"
 
 setup(
     name=project,
