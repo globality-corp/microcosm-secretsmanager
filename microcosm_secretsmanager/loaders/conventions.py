@@ -18,7 +18,7 @@ from microcosm.loaders import load_from_dict
 from microcosm_secretsmanager.loaders.base import SecretsManagerLoader
 
 
-def load_from_secretmanager(environment=None):
+def load_from_secretsmanager(environment=None):
     """
     Load the secrets into a dictionary, skip if no environment available
 
