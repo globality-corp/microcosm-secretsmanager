@@ -38,6 +38,15 @@ jobs:
           root: ~/repo
           <<: *whitelist
 
+  lint:
+    <<: *defaults
+
+    steps:
+      - run:
+          name: Lint Code
+          command: |
+            echo "This is a dummy step, tox is handling everything in test"
+
   test:
     <<: *defaults
 
@@ -81,6 +90,13 @@ workflows:
             # run for all branches and tags
             tags:
               only: /.*/
+      - lint:
+          requires:
+            - checkout
+          filters:
+            # run for all branches and tags
+            tags:
+              only: /.*/
       - test:
           requires:
             - checkout
@@ -91,6 +107,7 @@ workflows:
       - deploy:
           requires:
             - test
+            - lint
           filters:
             branches:
               only: develop
