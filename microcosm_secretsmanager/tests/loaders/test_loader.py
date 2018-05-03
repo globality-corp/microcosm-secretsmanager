@@ -114,9 +114,3 @@ class TestSecretsManagerLoader:
 
     def test_wrong_metadata(self):
             assert_that(calling(self.loader).with_args("WrongMetadata"), raises(InvalidMetadata))
-
-    def test_debug_testing(self):
-        with patch.object(self.loader, "make_client") as mocked:
-            metadata = Metadata("DummyService", debug=True)
-            assert_that(self.loader(metadata), equal_to(dict({})))
-            mocked.assert_not_called()

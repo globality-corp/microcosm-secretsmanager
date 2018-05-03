@@ -26,9 +26,6 @@ class SecretsManagerLoader:
         if not isinstance(metadata, Metadata):
             raise InvalidMetadata("Wrong argument metadata passed into SecretsManagerLoader")
 
-        if metadata.debug or metadata.testing:
-            return dict({})
-
         service = metadata.name
         return self.get_secret_value(service, version)
 
