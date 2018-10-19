@@ -1,7 +1,7 @@
+from collections import namedtuple
 from json import dumps
 from json.decoder import JSONDecodeError
-
-from collections import namedtuple
+from unittest.mock import patch
 
 from microcosm.metadata import Metadata
 from hamcrest import (
@@ -11,7 +11,6 @@ from hamcrest import (
     is_,
     raises,
 )
-from mock import patch
 
 from microcosm_secretsmanager.loaders.base import SecretsManagerLoader, InvalidMetadata
 

@@ -14,6 +14,7 @@ setup(
     packages=find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
     include_package_data=True,
     zip_safe=False,
+    python_requires=">=3.6",
     install_requires=[
         "microcosm>=2.1.0",
         "boto3>=1.7.9",
@@ -27,7 +28,6 @@ setup(
     },
     tests_require=[
         "coverage>=3.7.1",
-        "mock>=1.0.1",
         "PyHamcrest>=1.8.5",
     ],
 )
