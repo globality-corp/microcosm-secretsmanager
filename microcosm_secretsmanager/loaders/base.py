@@ -47,7 +47,7 @@ class SecretsManagerLoader:
                 **get_args,
             )
 
-        except ClientError as e:
+        except ClientError:
             warn(f"Unable to query configuration for {keyname}: version: {version}")
             raise
         else:
