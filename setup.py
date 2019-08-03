@@ -16,7 +16,7 @@ setup(
     zip_safe=False,
     python_requires=">=3.6",
     install_requires=[
-        "microcosm>=2.1.0",
+        "microcosm>=2.12.0",
         "boto3>=1.7.9",
     ],
     setup_requires=[
