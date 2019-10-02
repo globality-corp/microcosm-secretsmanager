@@ -1,0 +1,7 @@
+{
+  "params": {
+    "name": "microcosm-secretsmanager"
+  },
+  "type": "python-library",
+  "version": "2019.27.2"
+}
