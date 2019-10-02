@@ -4,16 +4,10 @@ from json.decoder import JSONDecodeError
 from unittest.mock import patch
 
 from microcosm.metadata import Metadata
-from hamcrest import (
-    assert_that,
-    calling,
-    equal_to,
-    is_,
-    raises,
-)
 
-from microcosm_secretsmanager.loaders.base import SecretsManagerLoader, InvalidMetadata
-
+from hamcrest import assert_that, calling, equal_to, is_, raises
+from microcosm_secretsmanager.loaders.base import (InvalidMetadata,
+                                                   SecretsManagerLoader)
 
 DummyValue = namedtuple("TestValue", "dummy")
 

@@ -4,7 +4,6 @@ from warnings import warn
 
 from boto3 import Session
 from botocore.exceptions import ClientError
-
 from microcosm.metadata import Metadata
 
 
