@@ -112,4 +112,15 @@ class TestSecretsManagerLoader:
         )
 
     def test_wrong_metadata(self):
-            assert_that(calling(self.loader).with_args("WrongMetadata"), raises(InvalidMetadata))
+        assert_that(calling(self.loader).with_args("WrongMetadata"), raises(InvalidMetadata))
+
+    # We allow underscore in the name for support in AI servies,
+    # we have a weird hyphen and underscore consistency rule
+    # so we need to protect against it in the loader
+    def test_load_with_underscore(self):
+        self.metadata = Metadata("dummy_underscore")
+        self.loader = DummySecretsManagerLoader(
+            environment="dev"
+        )
+        keyname = self.loader.keyname("dummy_underscore")
+        assert_that(keyname, equal_to("secrets/dev/dummy-underscore"))

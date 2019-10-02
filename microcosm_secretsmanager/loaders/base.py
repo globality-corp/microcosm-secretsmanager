@@ -61,7 +61,17 @@ class SecretsManagerLoader:
                     raise
 
     def keyname(self, service):
-        return f"secrets/{self.environment}/{service}"
+        """keyname
+        Return a key name for secrets manager based on the service
+        the service is sometimes underscored for python consistency,
+        however for AWS naming we use hyphens
+
+        We want to return the hyphened type here
+
+        :param service:
+        """
+        _service_name = service.replace("_", "-")
+        return f"secrets/{self.environment}/{_service_name}"
 
     def make_client(self, service):
         session = Session(profile_name=self.profile_name)
