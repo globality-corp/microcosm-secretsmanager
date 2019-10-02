@@ -1,7 +1,10 @@
 {
   "params": {
-    "name": "microcosm-secretsmanager"
+    "name": "microcosm-secretsmanager",
+    "pypi": {
+      "repository": "pypi"
+    }
   },
   "type": "python-library",
-  "version": "2019.27.2"
+  "version": "2019.39.0"
 }

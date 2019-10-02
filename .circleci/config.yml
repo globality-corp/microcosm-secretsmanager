@@ -14,7 +14,7 @@
 defaults: &defaults
   working_directory: ~/repo
   docker:
-    - image: ${AWS_ECR_DOMAIN}/globality-build:2019.27.2
+    - image: ${AWS_ECR_DOMAIN}/globality-build:2019.39.0
       aws_auth:
         aws_access_key_id: ${AWS_ACCESS_KEY_ID}
         aws_secret_access_key: ${AWS_SECRET_ACCESS_KEY}
@@ -22,11 +22,13 @@ defaults: &defaults
         EXTRA_INDEX_URL: "InjectedDuringRuntime"
         AWS_ECR_DOMAIN: "InjectedDuringRuntime"
         JFROG_AUTH: "InjectedDuringRuntime"
+        PYPI_USERNAME: "InjectedDuringRuntime"
+        PYPI_PASSWORD: "InjectedDuringRuntime"
 
 deploy_defaults: &deploy_defaults
   working_directory: ~/repo
   docker:
-    - image: ${AWS_ECR_DOMAIN}/globality-build:2019.27.2
+    - image: ${AWS_ECR_DOMAIN}/globality-build:2019.39.0
       aws_auth:
         aws_access_key_id: ${AWS_ACCESS_KEY_ID}
         aws_secret_access_key: ${AWS_SECRET_ACCESS_KEY}
@@ -34,6 +36,8 @@ deploy_defaults: &deploy_defaults
         EXTRA_INDEX_URL: "InjectedDuringRuntime"
         AWS_ECR_DOMAIN: "InjectedDuringRuntime"
         JFROG_AUTH: "InjectedDuringRuntime"
+        PYPI_USERNAME: "InjectedDuringRuntime"
+        PYPI_PASSWORD: "InjectedDuringRuntime"
 
 whitelist: &whitelist
   paths:
@@ -66,6 +70,7 @@ jobs:
           # install dependencies for loading ecs task definitions
           command: |
             eval $(aws ecr get-login --no-include-email)
+            globality-build build-gen local
             globality-build docker --repo python-library
 
   test:
@@ -127,7 +132,19 @@ jobs:
       - run:
           name: Deploy
           command: |
-            echo "Not publishing package!"
+            echo "[distutils]" > ~/.pypirc
+            echo "index-servers =" >> ~/.pypirc
+            echo "    pypi " >> ~/.pypirc
+            echo >> ~/.pypirc
+            echo "[pypi]" >> ~/.pypirc
+            echo "repository:https://upload.pypi.org/legacy/" >> ~/.pypirc
+            echo "username:$PYPI_USERNAME" >> ~/.pypirc
+            echo "password:$PYPI_PASSWORD" >> ~/.pypirc
+            echo >> ~/.pypirc
+            version=$(cat .bumpversion.cfg | awk '/current_version / {print $3}')
+            python setup.py register -r pypi
+            python setup.py sdist
+            twine upload --repository pypi dist/microcosm-secretsmanager-${version}.tar.gz
 
 workflows:
   version: 2
