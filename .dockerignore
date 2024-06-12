@@ -1,6 +1,6 @@
 *
 !microcosm_secretsmanager
-microcosm_secretsmanager/tests
+microcosm_secretsmanager/test*
 !dist/*-none-any.whl
 !entrypoint.sh
 !MANIFEST.in

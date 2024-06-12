@@ -40,7 +40,7 @@ class VersionedSecretsManagerLoader(SecretsManagerLoader):
         Construct using KMS key based on environment name.
 
         """
-        super(VersionedSecretsManagerLoader, self).__init__(
+        super().__init__(
             environment,
         )
 
@@ -55,7 +55,7 @@ class VersionedSecretsManagerLoader(SecretsManagerLoader):
             # skip AWS secretsmanager loading
             return {}
 
-        return super(VersionedSecretsManagerLoader, self).__call__(
+        return super().__call__(
             metadata,
             version,
         )

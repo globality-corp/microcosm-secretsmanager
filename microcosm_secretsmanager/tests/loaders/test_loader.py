@@ -3,19 +3,13 @@ from json import dumps
 from json.decoder import JSONDecodeError
 from unittest.mock import patch
 
-from hamcrest import (
-    assert_that,
-    calling,
-    equal_to,
-    is_,
-    raises,
-)
+from hamcrest import assert_that, calling, equal_to, is_, raises
 from microcosm.metadata import Metadata
 
-from microcosm_secretsmanager.loaders.base import InvalidMetadata, SecretsManagerLoader
+from microcosm_secretsmanager.loaders.base import (InvalidMetadata,
+                                                   SecretsManagerLoader)
 
-
-DummyValue = namedtuple("TestValue", "dummy")
+DummyValue = namedtuple("DummyValue", "dummy")
 
 
 class DummySecretsManagerLoader(SecretsManagerLoader):
@@ -33,7 +27,7 @@ class DummySecretsManagerLoader(SecretsManagerLoader):
 
 class TestSecretsManagerLoader:
 
-    def setup(self):
+    def setup_method(self):
         self.loader = DummySecretsManagerLoader(environment="dev")
         self.metadata = Metadata("dummy")
 
